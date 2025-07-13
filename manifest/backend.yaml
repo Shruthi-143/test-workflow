@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: three-tier-app
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: your-dockerhub/three-tier-backend:latest  # ← replace with your image
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          value: your-db-host.rds.amazonaws.com          # ← replace with actual RDS host
+        - name: DB_NAME
+          value: postgres                                # ← or your custom DB name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: three-tier-app
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP
+
