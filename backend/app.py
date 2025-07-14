@@ -1,10 +1,12 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import psycopg2
 import os
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS
 
-# Environment variables for DB connection
+# DB env vars
 DB_HOST = os.environ.get("DB_HOST")
 DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
@@ -18,7 +20,6 @@ def get_db_conn():
         dbname=DB_NAME
     )
 
-# Run once on first HTTP request (to init DB and insert demo data)
 @app.before_first_request
 def setup_db():
     try:
@@ -45,12 +46,10 @@ def setup_db():
     except Exception as e:
         print("Database setup failed:", e)
 
-# Health check endpoint
 @app.route("/health")
 def health():
     return "OK", 200
 
-# Users API
 @app.route("/users")
 def users():
     try:
