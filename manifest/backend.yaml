@@ -3,10 +3,8 @@ kind: Deployment
 metadata:
   name: backend
   namespace: test
-  labels:
-    app: backend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -17,12 +15,12 @@ spec:
     spec:
       containers:
       - name: backend
-        image: shetty143/backend-image:v2  # ← replace with your image
+        image: shetty143/backend-image:v6  # ← replace with your image
         ports:
         - containerPort: 5000
         env:
         - name: DB_HOST
-          value: demo.cz2g44isob5v.ap-south-2.rds.amazonaws.com          # ← replace with actual RDS host
+          value: backend-db.cz2g44isob5v.ap-south-2.rds.amazonaws.com      # ← replace with actual RDS host
         - name: DB_NAME
           value: postgres                                # ← or your custom DB name
         - name: DB_USER
