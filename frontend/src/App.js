@@ -5,7 +5,7 @@ function App() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://shruvon.link/users") // Your backend Ingress URL
+    fetch("https://shruvon.link/users") // Your backend Ingress URL
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => console.error("Failed to fetch users:", err));

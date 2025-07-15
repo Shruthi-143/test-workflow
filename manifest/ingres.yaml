@@ -7,7 +7,9 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/backend-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-2:416183837658:certificate/9d0ecff6-32c9-47d6-87fc-40daa3958e52
 spec:
   ingressClassName: alb
   rules:
@@ -28,13 +30,6 @@ spec:
                 name: backend-service
                 port:
                   number: 5000
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: backend-service
-                port:
-                  number: 5000
           - path: /app
             pathType: Prefix
             backend:
@@ -42,4 +37,11 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 5000
 
